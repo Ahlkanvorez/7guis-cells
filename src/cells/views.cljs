@@ -21,7 +21,10 @@
   [:div {:style (merge-with merge grid-cell-style
                             {:font-weight :bold
                              :background-color "#D3D3D3"
-                             :text-align :right})}
+                             :text-align :right
+                             :display :flex
+                             :flex-direction :column
+                             :justify-content :center})}
    content])
 
 (defn int->base26 [i]
