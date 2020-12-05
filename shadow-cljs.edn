@@ -1,0 +1,10 @@
+{:deps {:aliases [:dev]}
+ :builds
+ {:app {:target :browser
+        :output-dir "resources/public/js"
+        :asset-path "/js"
+        :modules {:main {:entries [cells.core]
+                         :init-fn cells.core/mount-root}}
+        :devtools
+        {:http-root "resources/public"
+         :http-port 8080}}}}
