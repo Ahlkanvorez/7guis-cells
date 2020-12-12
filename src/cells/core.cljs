@@ -1,9 +1,16 @@
 (ns cells.core
-  (:require [reagent.core :as r]
-            [reagent.dom :as rd]
+  (:require [reagent.dom :as rd]
+            [cells.db :as db]
+            [cells.grid :as grid]
             [cells.views :as views]))
 
-(defn mount-root []
-  (rd/render [views/grid 100 100]
-             (js/document.getElementById "app-root")))
+(defn main [state]
+  [views/grid {:rows (:rows state)
+               :cols (:cols state)
+               :value-registrar (db/value-registrar state)
+               :make-blur-handler (db/value-recalculator state)}])
 
+(defn mount-root []
+  (let [state (db/initial-state 12 26)]
+    (rd/render [main state]
+               (js/document.getElementById "app-root"))))
