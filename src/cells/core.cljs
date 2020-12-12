@@ -11,6 +11,6 @@
                :make-blur-handler (db/value-recalculator state)}])
 
 (defn mount-root []
-  (let [state (db/initial-state 12 26)]
+  (let [state (db/initial-state 100 26)]
     (rd/render [main state]
                (js/document.getElementById "app-root"))))
