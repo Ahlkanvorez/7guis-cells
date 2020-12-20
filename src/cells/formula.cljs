@@ -41,27 +41,32 @@
      :refresh #(let [dep-vals (map (comp :value deref) dep-atoms)]
                  (apply str dep-vals))}))
 
+(defn parse-args [args]
+  (if (string? args) (js/parseFloat args)
+      (->> (seq args) (remove empty?) (map js/parseFloat))))
+
 (def operations
-  (let [op (fn [f] (fn [args] (str (apply f (reverse args)))))]
+  (let [op (fn [f]
+             (fn [args]
+               (->> args reverse flatten parse-args
+                    ((fn [x] (println :applying f x args) x))
+                    (apply f) str)))]
     {"add" (op +) "sum" (op +)
      "mul" (op *) "prod" (op *)
      "sub" (op -)
      "div" (op /)}))
 
-(defn evaluate-formula [variables stack]
-  (loop [args () stack stack]
-    (if (and (empty? args) (= 1 (count stack)))
+(defn evaluate-formula [variables formula]
+  (loop [stack () unseen (seq formula)]
+    (if (and (empty? unseen) (= 1 (count stack)))
       (first stack)
       (if-let [op (get operations (first stack))]
-        (recur () (conj (rest stack) (op args)))
-        (recur (let [v (first stack)]
-                 (cond (empty? v) args
-                       (string? v) (conj args (js/parseFloat v))
-                       (vector? v) (concat args
-                                           (->> (remove empty? v)
-                                                (map js/parseFloat)))
-                       :default args))
-               (rest stack))))))
+        (if (vector? (second stack))
+          (recur (conj (drop 2 stack) (op (second stack)))
+                 unseen)
+          (recur (conj (drop 3 stack) (op (take 2 (rest stack))))
+                 unseen))
+        (recur (conj stack (first unseen)) (rest unseen))))))
 
 (defmulti form->coords formula-type)
 (defmethod form->coords :range [form] (vec (grid/range->coords form)))
