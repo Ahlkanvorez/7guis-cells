@@ -21,6 +21,7 @@ pipelines:
           caches:
             - maven
           script:
+            - apt install -y nodejs npm
             - clj -M:dev release app
   branches:
     master:
@@ -30,6 +31,7 @@ pipelines:
             caches:
               - maven
             script:
+              - apt install -y nodejs npm
               - clj -M:dev release app
             artifacts:
               - resources/public/index.html
