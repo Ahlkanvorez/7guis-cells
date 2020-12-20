@@ -3,7 +3,8 @@
 (def grid-cell {:border-right "1px solid #D3D3D3"
                 :border-bottom "1px solid #D3D3D3"
                 :min-width "60px"
-                :min-height "20px"})
+                :min-height "20px"
+                :text-align :center})
 
 (def cell (merge-with merge grid-cell {:display :grid :place-items :stretch}))
 

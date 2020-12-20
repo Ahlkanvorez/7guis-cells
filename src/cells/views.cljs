@@ -46,7 +46,11 @@
        (doall
         (for [i (range (* rows cols))]
           (cond
-            (= i 0) [:div {:key i} nil]
+            (= i 0) [:div {:key i :style styles/cell}
+                     [:a {:href "https://bitbucket.org/ahlk/cells-cljs"
+                          :target "_blank"
+                          :style {:text-decoration :none}}
+                      "(->source)"]]
             (col-header? i) [col-header {:key i} (grid/int->uppercase (dec i))]
             (row-header? i) [row-header {:key i} (/ i cols)]
             :default
