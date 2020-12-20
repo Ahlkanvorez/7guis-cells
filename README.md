@@ -11,8 +11,7 @@ clj -M:dev watch app
 
 ## Deployment
 
-Since this webapp uses no server-side state or requests, it can be deployed
-serverlessly, such as on S3 via CloudFront.
+A live demo is automatically deployed to S3 and served via CloudFront at [7gui-cells.robertm.io](http://7gui-cells.robertm.io)
 
 ## License
 
