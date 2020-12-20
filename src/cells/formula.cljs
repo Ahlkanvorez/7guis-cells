@@ -42,8 +42,9 @@
                  (apply str dep-vals))}))
 
 (defn parse-args [args]
-  (if (string? args) (js/parseFloat args)
-      (->> (seq args) (remove empty?) (map js/parseFloat))))
+  (if (string? args)
+    (js/parseFloat args)
+    (->> (seq args) (remove nil?) (remove empty?) (map js/parseFloat))))
 
 (def operations
   (let [op (fn [f]
@@ -59,7 +60,7 @@
     (if (and (empty? unseen) (= 1 (count stack)))
       (first stack)
       (if-let [op (get operations (first stack))]
-        (if (vector? (second stack))
+        (if (and (vector? (second stack)) (> (count (second stack)) 1))
           (recur (conj (drop 2 stack) (op (second stack)))
                  unseen)
           (recur (conj (drop 3 stack) (op (take 2 (rest stack))))
