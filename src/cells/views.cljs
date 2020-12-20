@@ -14,7 +14,7 @@
       [:input
        {:style (styles/input-cell (:selected @value))
         :type :text
-        :auto-focus true
+        :auto-focus (:selected @value)
         :value (if (:selected @value)
                  (:formula @value)
                  (:value @value))
