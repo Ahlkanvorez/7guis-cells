@@ -16,6 +16,7 @@
             :margin 0
             :outline :none
             :padding (if selected? 1 2)
+            :text-align (if selected? :left :right)
             :border-bottom border
             :border-top border
             :border-right border

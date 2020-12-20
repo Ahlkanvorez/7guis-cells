@@ -48,9 +48,7 @@
 (def operations
   (let [op (fn [f]
              (fn [args]
-               (->> args reverse flatten parse-args
-                    ((fn [x] (println :applying f x args) x))
-                    (apply f) str)))]
+               (->> args reverse flatten parse-args (apply f) str)))]
     {"add" (op +) "sum" (op +)
      "mul" (op *) "prod" (op *)
      "sub" (op -)
