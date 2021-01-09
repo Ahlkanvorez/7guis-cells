@@ -47,7 +47,7 @@
         (for [i (range (* rows cols))]
           (cond
             (= i 0) [:div {:key i :style styles/cell}
-                     [:a {:href "https://bitbucket.org/ahlk/cells-cljs"
+                     [:a {:href "https://github.com/Ahlkanvorez/7guis-cells"
                           :target "_blank"
                           :style {:text-decoration :none}}
                       "(->source)"]]
