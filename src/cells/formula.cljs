@@ -1,5 +1,6 @@
 (ns cells.formula
-  (:require [cells.grid :as grid]))
+  (:require [clojure.string :as string]
+            [cells.grid :as grid]))
 
 (defn parse-function [formula]
   (loop [equation (seq formula)
@@ -8,7 +9,7 @@
     (if-let [c (first equation)]
       (if (contains? #{"(" ")" ","} c)
         (recur (rest equation)
-               (let [trimmed (clojure.string/trim s)]
+               (let [trimmed (string/trim s)]
                  (if-not (empty? trimmed)
                    (conj stack trimmed)
                    stack))
@@ -19,8 +20,8 @@
 (defn formula-type [formula]
   (cond (grid/cell-range formula) :range
         (grid/cell-ref? formula) :reference
-        (not (empty? (parse-function formula))) :function
-        :default :error))
+        (seq (parse-function formula)) :function
+        :else :error))
 
 (defmulti parse-formula (fn [_values formula] (formula-type formula)))
 
@@ -55,17 +56,17 @@
      "sub" (op -)
      "div" (op /)}))
 
-(defn evaluate-formula [variables formula]
+(defn evaluate-formula [formula]
   (loop [stack () unseen (seq formula)]
     (if (and (empty? unseen) (= 1 (count stack)))
       (first stack)
       (if-let [op (get operations (first stack))]
         (if (and (vector? (second stack)) (> (count (second stack)) 1))
-          (recur (conj (drop 2 stack) (op (second stack)))
-                 unseen)
-          (recur (conj (drop 3 stack) (op (take 2 (rest stack))))
-                 unseen))
-        (recur (conj stack (first unseen)) (rest unseen))))))
+          (recur (conj (drop 2 stack) (op (second stack))) unseen)
+          (recur (conj (drop 3 stack) (op (take 2 (rest stack)))) unseen))
+        (if-let [n (first unseen)]
+          (recur (conj stack n) (rest unseen))
+          "#Error")))))
 
 (defmulti form->coords formula-type)
 (defmethod form->coords :range [form] (vec (grid/range->coords form)))
@@ -96,7 +97,7 @@
                          (transduce-stack
                           (comp (map form->coords)
                                 (inject-values (deref-vars)))))]
-    {:deps deps :refresh #(evaluate-formula vars (expand-formula))}))
+    {:deps deps :refresh #(evaluate-formula (expand-formula))}))
 
 (defmethod parse-formula :default [_values formula]
   {:value formula :deps []})

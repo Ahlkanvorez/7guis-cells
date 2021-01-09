@@ -1,4 +1,5 @@
-(ns cells.grid)
+(ns cells.grid
+  (:require [clojure.string :as string]))
 
 (defn int->base26-digits [i]
   (loop [digits [(inc (mod i 26))]
@@ -46,5 +47,5 @@
     [r c]))
 
 (defn range->coords [range]
-  (let [[start-ref end-ref] (clojure.string/split range #":")]
+  (let [[start-ref end-ref] (string/split range #":")]
     (coord-grid (ref->coord start-ref) (ref->coord end-ref))))

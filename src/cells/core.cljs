@@ -1,7 +1,6 @@
 (ns cells.core
   (:require [reagent.dom :as rd]
             [cells.db :as db]
-            [cells.grid :as grid]
             [cells.views :as views]))
 
 (defn main [state]

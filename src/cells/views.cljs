@@ -33,8 +33,8 @@
 (defn header [direction content]
   [:div {:style (styles/header direction)} content])
 
-(defn col-header [options content] (header :horizontal content))
-(defn row-header [options content] (header :vertical content))
+(defn col-header [_options content] (header :horizontal content))
+(defn row-header [_options content] (header :vertical content))
 
 (defn grid [{:keys [rows cols value-registrar make-blur-handler]}]
   (let [cols (inc cols)]
@@ -53,7 +53,7 @@
                       "(->source)"]]
             (col-header? i) [col-header {:key i} (grid/int->uppercase (dec i))]
             (row-header? i) [row-header {:key i} (/ i cols)]
-            :default
+            :else
             [cell {:key i}
              [input-cell {:row (row i)
                           :col (col i)
